@@ -80,8 +80,9 @@ Netzwerkkonfiguration:
 
 Containers:
 ```bash
-CONTAINER ID   IMAGE     COMMAND                  CREATED          STATUS          PORTS     NAMES
-5ffb87b0f7d7   alpine    "/bin/sh -c 'while t…"   43 seconds ago   Up 42 seconds             container2
+CONTAINER ID   IMAGE     COMMAND                  CREATED         STATUS         PORTS     NAMES
+e8cffe42693f   alpine    "/bin/sh -c 'while t…"   2 minutes ago   Up 2 minutes             container3
+5ffb87b0f7d7   alpine    "/bin/sh -c 'while t…"   3 hours ago     Up 3 hours               container2
 ```
 
 Routing Table:
@@ -99,16 +100,24 @@ default via 10.0.2.1 dev enp0s3 proto dhcp metric 100
 PING 172.1.1.2 (172.1.1.2): 56 data bytes
 64 bytes from 172.1.1.2: seq=0 ttl=63 time=0.134 ms
 
-# container1 zu container0
-PING 172.0.0.2 (172.0.0.2): 56 data bytes
-64 bytes from 172.0.0.2: seq=0 ttl=63 time=0.087 ms
-
 # container0 zu container2
 --- 172.2.2.2 ping statistics ---
 3 packets transmitted, 0 packets received, 100% packet loss
 
+# container0 zu container3
+--- 172.2.2.3 ping statistics ---
+3 packets transmitted, 0 packets received, 100% packet loss
+
+# container1 zu container0
+PING 172.0.0.2 (172.0.0.2): 56 data bytes
+64 bytes from 172.0.0.2: seq=0 ttl=63 time=0.087 ms
+
 # container1 zu container2
 --- 172.2.2.2 ping statistics ---
+3 packets transmitted, 0 packets received, 100% packet loss
+
+# container1 zu container3
+--- 172.2.2.3 ping statistics ---
 3 packets transmitted, 0 packets received, 100% packet loss
 
 # container2 zu container0
@@ -118,15 +127,32 @@ PING 172.0.0.2 (172.0.0.2): 56 data bytes
 # container2 zu container1
 --- 172.1.1.2 ping statistics ---
 3 packets transmitted, 0 packets received, 100% packet loss
+
+# container2 zu container3
+PING 172.2.2.3 (172.2.2.3): 56 data bytes
+64 bytes from 172.2.2.3: seq=0 ttl=64 time=0.229 ms
+
+# container3 zu container0
+--- 172.0.0.2 ping statistics ---
+3 packets transmitted, 0 packets received, 100% packet loss
+
+# container3 zu container1
+--- 172.1.1.2 ping statistics ---
+3 packets transmitted, 0 packets received, 100% packet loss
+
+# container3 zu container2
+PING 172.2.2.2 (172.2.2.2): 56 data bytes
+64 bytes from 172.2.2.2: seq=0 ttl=64 time=0.051 ms
 ```
 
 Kommunikationstabelle:
-|||||
-| ---------- | ---------- | ---------- | ---------- |
-|            | container0 | container1 | container2 |
-| container0 | yes | yes | no |
-| container1 | yes | yes | no |
-| container2 | no | no | yes |
+||||||
+| ---------- | ---------- | ---------- | ---------- | ----------- |
+|            | container0 | container1 | container2 | container 3 |
+| container0 | yes | yes | no | no |
+| container1 | yes | yes | no | no |
+| container2 | no | no | yes | yes |
+| container3 | no | no | yes | yes |
 
 ## FRR OSPFv2
 
@@ -216,17 +242,25 @@ default via 10.0.2.1 dev enp0s3 proto dhcp metric 100
 PING 172.1.1.2 (172.1.1.2): 56 data bytes
 64 bytes from 172.1.1.2: seq=0 ttl=63 time=0.134 ms
 
-# container1 zu container0
-PING 172.0.0.2 (172.0.0.2): 56 data bytes
-64 bytes from 172.0.0.2: seq=0 ttl=63 time=0.087 ms
-
 # container0 zu container2
 PING 172.2.2.2 (172.2.2.2): 56 data bytes
 64 bytes from 172.2.2.2: seq=0 ttl=62 time=0.499 ms
 
+# container0 zu container3
+PING 172.2.2.3 (172.2.2.3): 56 data bytes
+64 bytes from 172.2.2.3: seq=0 ttl=62 time=0.421 ms
+
+# container1 zu container0
+PING 172.0.0.2 (172.0.0.2): 56 data bytes
+64 bytes from 172.0.0.2: seq=0 ttl=63 time=0.087 ms
+
 # container1 zu container2
 PING 172.2.2.2 (172.2.2.2): 56 data bytes
 64 bytes from 172.2.2.2: seq=0 ttl=62 time=0.423 ms
+
+# container1 zu container3
+PING 172.2.2.3 (172.2.2.3): 56 data bytes
+64 bytes from 172.2.2.3: seq=0 ttl=62 time=0.596 ms
 
 # container2 zu container0
 PING 172.0.0.2 (172.0.0.2): 56 data bytes
@@ -235,15 +269,32 @@ PING 172.0.0.2 (172.0.0.2): 56 data bytes
 # container2 zu container1
 PING 172.1.1.2 (172.1.1.2): 56 data bytes
 64 bytes from 172.1.1.2: seq=0 ttl=62 time=0.449 ms
+
+# container2 zu container3
+PING 172.2.2.3 (172.2.2.3): 56 data bytes
+64 bytes from 172.2.2.3: seq=0 ttl=64 time=0.126 ms
+
+# container3 zu container0
+PING 172.0.0.2 (172.0.0.2): 56 data bytes
+64 bytes from 172.0.0.2: seq=0 ttl=62 time=0.495 ms
+
+# container3 zu container1
+PING 172.1.1.2 (172.1.1.2): 56 data bytes
+64 bytes from 172.1.1.2: seq=0 ttl=62 time=0.496 ms
+
+# container3 zu container2
+PING 172.2.2.3 (172.2.2.3): 56 data bytes
+64 bytes from 172.2.2.3: seq=0 ttl=64 time=0.035 ms
 ```
 
 Kommunikationstabelle:
-|||||
-| ---------- | ---------- | ---------- | ---------- |
-|            | container0 | container1 | container2 |
-| container0 | yes | yes | yes |
-| container1 | yes | yes | yes |
-| container2 | yes | yes | yes |
+||||||
+| ---------- | ---------- | ---------- | ---------- | ----------- |
+|            | container0 | container1 | container2 | container 3 |
+| container0 | yes | yes | yes | yes |
+| container1 | yes | yes | yes | yes |
+| container2 | yes | yes | yes | yes |
+| container3 | yes | yes | yes | yes |
 
 
 

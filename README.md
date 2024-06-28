@@ -296,6 +296,75 @@ Kommunikationstabelle:
 | container2 | yes | yes | yes | yes |
 | container3 | yes | yes | yes | yes |
 
+## Zustand der VMs mit OSPF in Variante 1 und Firewall unterbindet Forwarding
 
+### NFT Firewallkonfiguration auf beiden VMs
 
-Debugging Aufwand bei Netzwerkfehlern betrachten.
+```bash
+table ip container {
+        chain forward {
+                type filter hook forward priority filter; policy drop;
+        }
+}
+```
+
+### Container Ping Test
+
+```bash
+# container0 zu contianer1
+--- 172.1.1.2 ping statistics ---
+2 packets transmitted, 0 packets received, 100% packet loss
+
+# container0 zu container2
+--- 172.2.2.2 ping statistics ---
+2 packets transmitted, 0 packets received, 100% packet loss
+
+# container0 zu container3
+--- 172.2.2.3 ping statistics ---
+2 packets transmitted, 0 packets received, 100% packet loss
+
+# container1 zu container0
+--- 172.0.0.2 ping statistics ---
+6 packets transmitted, 0 packets received, 100% packet loss
+
+# container1 zu container2
+--- 172.2.2.2 ping statistics ---
+2 packets transmitted, 0 packets received, 100% packet loss
+
+# container1 zu container3
+--- 172.2.2.3 ping statistics ---
+4 packets transmitted, 0 packets received, 100% packet loss
+
+# container2 zu container0
+--- 172.0.0.2 ping statistics ---
+3 packets transmitted, 0 packets received, 100% packet loss
+
+# container2 zu container1
+--- 172.1.1.2 ping statistics ---
+3 packets transmitted, 0 packets received, 100% packet loss
+
+# container2 zu container3
+--- 172.2.2.3 ping statistics ---
+3 packets transmitted, 0 packets received, 100% packet loss
+
+# container3 zu container0
+--- 172.0.0.2 ping statistics ---
+2 packets transmitted, 0 packets received, 100% packet loss
+
+# container3 zu container1
+--- 172.1.1.2 ping statistics ---
+3 packets transmitted, 0 packets received, 100% packet loss
+
+# container3 zu container2
+--- 172.2.2.2 ping statistics ---
+2 packets transmitted, 0 packets received, 100% packet loss
+```
+
+Kommunikationstabelle:
+||||||
+| ---------- | ---------- | ---------- | ---------- | ----------- |
+|            | container0 | container1 | container2 | container 3 |
+| container0 | yes | no | no | no |
+| container1 | no | yes | no | no |
+| container2 | no | no | yes | no |
+| container3 | no | no | no | yes |

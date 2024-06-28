@@ -2,7 +2,7 @@
 
 ## Versuchsaufbau
 
-Immage
+![neetwork-lab](images/network-lab.drawio.png)
 
 ## Zustand der VMs ohne OSPF und mit deaktivierter Firewall
 

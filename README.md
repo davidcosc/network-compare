@@ -301,8 +301,8 @@ Kommunikationstabelle:
 ### NFT Firewallkonfiguration auf beiden VMs
 
 ```bash
-table ip container {
-        chain forward {
+table ip ip-traffic-table {
+        chain containers {
                 type filter hook forward priority filter; policy drop;
         }
 }
@@ -368,3 +368,26 @@ Kommunikationstabelle:
 | container1 | no | yes | no | no |
 | container2 | no | no | yes | no |
 | container3 | no | no | no | yes |
+
+## Zustand der VMs mit OSPF in Variante 1 und Firewall Whitelisting L3
+
+### NFT Firewallkonfiguration VM 1
+
+```bash
+table ip ip-traffic-table {
+        chain containers {
+                type filter hook forward priority filter; policy drop;
+        }
+}
+```
+
+### NFT Firewallkonfiguration VM 2
+
+```bash
+table ip ip-traffic-table {
+        chain containers {
+                type filter hook forward priority filter; policy drop;
+                ip saddr 172.2.2.3 ip daddr 172.2.2.2 accept
+        }
+}
+```

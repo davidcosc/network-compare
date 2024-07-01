@@ -20,28 +20,28 @@ Netzwerkkonfiguration:
 2: enp0s3: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
     link/ether 08:00:27:13:53:9e brd ff:ff:ff:ff:ff:ff
     inet 10.0.2.16/24 brd 10.0.2.255 scope global dynamic noprefixroute enp0s3
-       valid_lft 428sec preferred_lft 428sec
+       valid_lft 407sec preferred_lft 407sec
     inet6 fe80::4086:4a:e126:c8f7/64 scope link noprefixroute
        valid_lft forever preferred_lft forever
-7: docker0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default
-    link/ether 02:42:5f:d0:34:8b brd ff:ff:ff:ff:ff:ff
-    inet 172.0.0.1/24 brd 172.0.0.255 scope global docker0
+3: docker0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default
+    link/ether 02:42:58:97:88:5b brd ff:ff:ff:ff:ff:ff
+    inet 172.18.0.1/24 brd 172.18.0.255 scope global docker0
        valid_lft forever preferred_lft forever
-    inet6 fe80::42:5fff:fed0:348b/64 scope link
+    inet6 fe80::42:58ff:fe97:885b/64 scope link
        valid_lft forever preferred_lft forever
-8: docker1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default
-    link/ether 02:42:53:7e:37:6d brd ff:ff:ff:ff:ff:ff
-    inet 172.1.1.1/24 brd 172.1.1.255 scope global docker1
+4: docker1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default
+    link/ether 02:42:2f:37:dd:97 brd ff:ff:ff:ff:ff:ff
+    inet 172.18.1.1/24 brd 172.18.1.255 scope global docker1
        valid_lft forever preferred_lft forever
-    inet6 fe80::42:53ff:fe7e:376d/64 scope link
+    inet6 fe80::42:2fff:fe37:dd97/64 scope link
        valid_lft forever preferred_lft forever
 ```
 
 Containers:
 ```bash
-CONTAINER ID   IMAGE     COMMAND                  CREATED          STATUS          PORTS     NAMES
-c1b528fc1945   alpine    "/bin/sh -c 'while t…"   15 minutes ago   Up 15 minutes             container1
-c9af8dfa242b   alpine    "/bin/sh -c 'while t…"   15 minutes ago   Up 15 minutes             container0
+CONTAINER ID   IMAGE     COMMAND                  CREATED         STATUS         PORTS     NAMES
+6ae61c5a6a48   alpine    "/bin/sh -c 'while t…"   5 minutes ago   Up 5 minutes             container1
+584985861dc3   alpine    "/bin/sh -c 'while t…"   5 minutes ago   Up 5 minutes             container0
 ```
 
 Routing Table:
@@ -49,8 +49,8 @@ Routing Table:
 default via 10.0.2.1 dev enp0s3 proto dhcp metric 100
 10.0.2.0/24 dev enp0s3 proto kernel scope link src 10.0.2.16 metric 100
 169.254.0.0/16 dev enp0s3 scope link metric 1000
-172.0.0.0/24 dev docker0 proto kernel scope link src 172.0.0.1
-172.1.1.0/24 dev docker1 proto kernel scope link src 172.1.1.1
+172.18.0.0/24 dev docker0 proto kernel scope link src 172.18.0.1
+172.18.1.0/24 dev docker1 proto kernel scope link src 172.18.1.1
 ```
 
 ### VM2
@@ -67,22 +67,22 @@ Netzwerkkonfiguration:
 2: enp0s3: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
     link/ether 08:00:27:c7:4c:8b brd ff:ff:ff:ff:ff:ff
     inet 10.0.2.17/24 brd 10.0.2.255 scope global dynamic noprefixroute enp0s3
-       valid_lft 571sec preferred_lft 571sec
+       valid_lft 513sec preferred_lft 513sec
     inet6 fe80::ec2b:9862:7d5d:470f/64 scope link noprefixroute
        valid_lft forever preferred_lft forever
-5: docker2: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default
-    link/ether 02:42:21:13:d0:ea brd ff:ff:ff:ff:ff:ff
-    inet 172.2.2.1/24 brd 172.2.2.255 scope global docker2
+3: docker2: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default
+    link/ether 02:42:32:4d:dc:a1 brd ff:ff:ff:ff:ff:ff
+    inet 172.18.2.1/24 brd 172.18.2.255 scope global docker2
        valid_lft forever preferred_lft forever
-    inet6 fe80::42:21ff:fe13:d0ea/64 scope link
+    inet6 fe80::42:32ff:fe4d:dca1/64 scope link
        valid_lft forever preferred_lft forever
 ```
 
 Containers:
 ```bash
 CONTAINER ID   IMAGE     COMMAND                  CREATED         STATUS         PORTS     NAMES
-e8cffe42693f   alpine    "/bin/sh -c 'while t…"   2 minutes ago   Up 2 minutes             container3
-5ffb87b0f7d7   alpine    "/bin/sh -c 'while t…"   3 hours ago     Up 3 hours               container2
+edbc427d279d   alpine    "/bin/sh -c 'while t…"   7 minutes ago   Up 7 minutes             container3
+d10bf3b22595   alpine    "/bin/sh -c 'while t…"   7 minutes ago   Up 7 minutes             container2
 ```
 
 Routing Table:
@@ -90,59 +90,75 @@ Routing Table:
 default via 10.0.2.1 dev enp0s3 proto dhcp metric 100
 10.0.2.0/24 dev enp0s3 proto kernel scope link src 10.0.2.17 metric 100
 169.254.0.0/16 dev enp0s3 scope link metric 1000
-172.2.2.0/24 dev docker2 proto kernel scope link src 172.2.2.1
+172.18.2.0/24 dev docker2 proto kernel scope link src 172.18.2.1
 ```
 
 ### Container Ping Test
 
 ```bash
 # container0 zu contianer1
-PING 172.1.1.2 (172.1.1.2): 56 data bytes
-64 bytes from 172.1.1.2: seq=0 ttl=63 time=0.134 ms
+PING 172.18.1.2 (172.18.1.2): 56 data bytes
+64 bytes from 172.18.1.2: seq=0 ttl=63 time=0.143 ms
 
 # container0 zu container2
---- 172.2.2.2 ping statistics ---
-3 packets transmitted, 0 packets received, 100% packet loss
+PING 172.18.2.2 (172.18.2.2): 56 data bytes
+^C
+--- 172.18.2.2 ping statistics ---
+2 packets transmitted, 0 packets received, 100% packet loss
 
 # container0 zu container3
---- 172.2.2.3 ping statistics ---
-3 packets transmitted, 0 packets received, 100% packet loss
+PING 172.18.2.3 (172.18.2.3): 56 data bytes
+^C
+--- 172.18.2.3 ping statistics ---
+4 packets transmitted, 0 packets received, 100% packet loss
 
 # container1 zu container0
-PING 172.0.0.2 (172.0.0.2): 56 data bytes
-64 bytes from 172.0.0.2: seq=0 ttl=63 time=0.087 ms
+PING 172.18.0.2 (172.18.0.2): 56 data bytes
+64 bytes from 172.18.0.2: seq=0 ttl=63 time=0.237 ms
 
 # container1 zu container2
---- 172.2.2.2 ping statistics ---
+PING 172.18.2.2 (172.18.2.2): 56 data bytes
+^C
+--- 172.18.2.2 ping statistics ---
 3 packets transmitted, 0 packets received, 100% packet loss
 
 # container1 zu container3
---- 172.2.2.3 ping statistics ---
-3 packets transmitted, 0 packets received, 100% packet loss
+PING 172.18.2.3 (172.18.2.3): 56 data bytes
+^C
+--- 172.18.2.3 ping statistics ---
+2 packets transmitted, 0 packets received, 100% packet loss
 
 # container2 zu container0
---- 172.0.0.2 ping statistics ---
-3 packets transmitted, 0 packets received, 100% packet loss
+PING 172.18.0.2 (172.18.0.2): 56 data bytes
+^C
+--- 172.18.0.2 ping statistics ---
+2 packets transmitted, 0 packets received, 100% packet loss
 
 # container2 zu container1
---- 172.1.1.2 ping statistics ---
-3 packets transmitted, 0 packets received, 100% packet loss
+PING 172.18.1.2 (172.18.1.2): 56 data bytes
+^C
+--- 172.18.1.2 ping statistics ---
+2 packets transmitted, 0 packets received, 100% packet loss
 
 # container2 zu container3
-PING 172.2.2.3 (172.2.2.3): 56 data bytes
-64 bytes from 172.2.2.3: seq=0 ttl=64 time=0.229 ms
+PING 172.18.2.3 (172.18.2.3): 56 data bytes
+64 bytes from 172.18.2.3: seq=0 ttl=64 time=0.092 ms
 
 # container3 zu container0
---- 172.0.0.2 ping statistics ---
-3 packets transmitted, 0 packets received, 100% packet loss
+PING 172.18.0.2 (172.18.0.2): 56 data bytes
+^C
+--- 172.18.0.2 ping statistics ---
+2 packets transmitted, 0 packets received, 100% packet loss
 
 # container3 zu container1
---- 172.1.1.2 ping statistics ---
-3 packets transmitted, 0 packets received, 100% packet loss
+PING 172.18.1.2 (172.18.1.2): 56 data bytes
+^C
+--- 172.18.1.2 ping statistics ---
+2 packets transmitted, 0 packets received, 100% packet loss
 
 # container3 zu container2
-PING 172.2.2.2 (172.2.2.2): 56 data bytes
-64 bytes from 172.2.2.2: seq=0 ttl=64 time=0.051 ms
+PING 172.18.2.2 (172.18.2.2): 56 data bytes
+64 bytes from 172.18.2.2: seq=0 ttl=64 time=0.096 ms
 ```
 
 Kommunikationstabelle:
@@ -174,6 +190,16 @@ Konfigurationsaufwände:
 ## Zustand der VMs mit OSPF in Variante 1 und mit deaktivierter Firewall
 
 ### VM1
+Firewall:
+```bash
+root@ospf1:~# iptables -S
+-P INPUT ACCEPT
+-P FORWARD ACCEPT
+-P OUTPUT ACCEPT
+root@ospf1:~# nft list ruleset
+root@ospf1:~#
+```
+
 OSPF Config:
 ```bash
 frr version 8.1
@@ -199,12 +225,22 @@ default via 10.0.2.1 dev enp0s3 proto dhcp metric 100
 2.2.2.2 nhid 30 via 10.0.2.17 dev enp0s3 proto ospf metric 20
 10.0.2.0/24 dev enp0s3 proto kernel scope link src 10.0.2.16 metric 100
 169.254.0.0/16 dev enp0s3 scope link metric 1000
-172.0.0.0/24 dev docker0 proto kernel scope link src 172.0.0.1
-172.1.1.0/24 dev docker1 proto kernel scope link src 172.1.1.1
-172.2.2.0/24 nhid 30 via 10.0.2.17 dev enp0s3 proto ospf metric 20
+172.18.0.0/24 dev docker0 proto kernel scope link src 172.18.0.1
+172.18.1.0/24 dev docker1 proto kernel scope link src 172.18.1.1
+172.18.2.0/24 nhid 30 via 10.0.2.17 dev enp0s3 proto ospf metric 20
 ```
 
 ### VM2
+Firewall:
+```bash
+root@ospf2:~# iptables -S
+-P INPUT ACCEPT
+-P FORWARD ACCEPT
+-P OUTPUT ACCEPT
+root@ospf2:~# nft list ruleset
+root@ospf2:~#
+```
+
 OSPF Config VM2:
 ```bash
 frr version 8.1
@@ -227,64 +263,64 @@ exit
 Routing Table:
 ```bash
 default via 10.0.2.1 dev enp0s3 proto dhcp metric 100
-1.1.1.1 nhid 22 via 10.0.2.16 dev enp0s3 proto ospf metric 20
+1.1.1.1 nhid 24 via 10.0.2.16 dev enp0s3 proto ospf metric 20
 10.0.2.0/24 dev enp0s3 proto kernel scope link src 10.0.2.17 metric 100
 169.254.0.0/16 dev enp0s3 scope link metric 1000
-172.0.0.0/24 nhid 22 via 10.0.2.16 dev enp0s3 proto ospf metric 20
-172.1.1.0/24 nhid 22 via 10.0.2.16 dev enp0s3 proto ospf metric 20
-172.2.2.0/24 dev docker2 proto kernel scope link src 172.2.2.1
+172.18.0.0/24 nhid 24 via 10.0.2.16 dev enp0s3 proto ospf metric 20
+172.18.1.0/24 nhid 24 via 10.0.2.16 dev enp0s3 proto ospf metric 20
+172.18.2.0/24 dev docker2 proto kernel scope link src 172.18.2.1
 ```
 
 ### Container Ping Test
 
 ```bash
 # container0 zu contianer1
-PING 172.1.1.2 (172.1.1.2): 56 data bytes
-64 bytes from 172.1.1.2: seq=0 ttl=63 time=0.134 ms
+PING 172.18.1.2 (172.18.1.2): 56 data bytes
+64 bytes from 172.18.1.2: seq=0 ttl=63 time=0.087 ms
 
 # container0 zu container2
-PING 172.2.2.2 (172.2.2.2): 56 data bytes
-64 bytes from 172.2.2.2: seq=0 ttl=62 time=0.499 ms
+PING 172.18.2.2 (172.18.2.2): 56 data bytes
+64 bytes from 172.18.2.2: seq=0 ttl=62 time=0.694 ms
 
 # container0 zu container3
-PING 172.2.2.3 (172.2.2.3): 56 data bytes
-64 bytes from 172.2.2.3: seq=0 ttl=62 time=0.421 ms
+PING 172.18.2.3 (172.18.2.3): 56 data bytes
+64 bytes from 172.18.2.3: seq=0 ttl=62 time=0.860 ms
 
 # container1 zu container0
-PING 172.0.0.2 (172.0.0.2): 56 data bytes
-64 bytes from 172.0.0.2: seq=0 ttl=63 time=0.087 ms
+PING 172.18.0.2 (172.18.0.2): 56 data bytes
+64 bytes from 172.18.0.2: seq=0 ttl=63 time=0.370 ms
 
 # container1 zu container2
-PING 172.2.2.2 (172.2.2.2): 56 data bytes
-64 bytes from 172.2.2.2: seq=0 ttl=62 time=0.423 ms
+PING 172.18.2.2 (172.18.2.2): 56 data bytes
+64 bytes from 172.18.2.2: seq=0 ttl=62 time=0.467 ms
 
 # container1 zu container3
-PING 172.2.2.3 (172.2.2.3): 56 data bytes
-64 bytes from 172.2.2.3: seq=0 ttl=62 time=0.596 ms
+PING 172.18.2.3 (172.18.2.3): 56 data bytes
+64 bytes from 172.18.2.3: seq=0 ttl=62 time=0.670 ms
 
 # container2 zu container0
-PING 172.0.0.2 (172.0.0.2): 56 data bytes
-64 bytes from 172.0.0.2: seq=0 ttl=62 time=0.476 ms
+PING 172.18.0.2 (172.18.0.2): 56 data bytes
+64 bytes from 172.18.0.2: seq=0 ttl=62 time=0.709 ms
 
 # container2 zu container1
-PING 172.1.1.2 (172.1.1.2): 56 data bytes
-64 bytes from 172.1.1.2: seq=0 ttl=62 time=0.449 ms
+PING 172.18.1.2 (172.18.1.2): 56 data bytes
+64 bytes from 172.18.1.2: seq=0 ttl=62 time=0.524 ms
 
 # container2 zu container3
-PING 172.2.2.3 (172.2.2.3): 56 data bytes
-64 bytes from 172.2.2.3: seq=0 ttl=64 time=0.126 ms
+PING 172.18.2.3 (172.18.2.3): 56 data bytes
+64 bytes from 172.18.2.3: seq=0 ttl=64 time=0.126 ms
 
 # container3 zu container0
-PING 172.0.0.2 (172.0.0.2): 56 data bytes
-64 bytes from 172.0.0.2: seq=0 ttl=62 time=0.495 ms
+PING 172.18.0.2 (172.18.0.2): 56 data bytes
+64 bytes from 172.18.0.2: seq=0 ttl=62 time=0.527 ms
 
 # container3 zu container1
-PING 172.1.1.2 (172.1.1.2): 56 data bytes
-64 bytes from 172.1.1.2: seq=0 ttl=62 time=0.496 ms
+PING 172.18.1.2 (172.18.1.2): 56 data bytes
+64 bytes from 172.18.1.2: seq=0 ttl=62 time=0.580 ms
 
 # container3 zu container2
-PING 172.2.2.3 (172.2.2.3): 56 data bytes
-64 bytes from 172.2.2.3: seq=0 ttl=64 time=0.035 ms
+PING 172.18.2.2 (172.18.2.2): 56 data bytes
+64 bytes from 172.18.2.2: seq=0 ttl=64 time=0.073 ms
 ```
 
 Kommunikationstabelle:
@@ -312,51 +348,75 @@ table ip ip-traffic-table {
 
 ```bash
 # container0 zu contianer1
---- 172.1.1.2 ping statistics ---
+PING 172.18.1.2 (172.18.1.2): 56 data bytes
+^C
+--- 172.18.1.2 ping statistics ---
 2 packets transmitted, 0 packets received, 100% packet loss
 
 # container0 zu container2
---- 172.2.2.2 ping statistics ---
+PING 172.18.2.2 (172.18.2.2): 56 data bytes
+^C
+--- 172.18.2.2 ping statistics ---
 2 packets transmitted, 0 packets received, 100% packet loss
 
 # container0 zu container3
---- 172.2.2.3 ping statistics ---
+PING 172.18.2.3 (172.18.2.3): 56 data bytes
+^C
+--- 172.18.2.3 ping statistics ---
 2 packets transmitted, 0 packets received, 100% packet loss
 
 # container1 zu container0
---- 172.0.0.2 ping statistics ---
-6 packets transmitted, 0 packets received, 100% packet loss
+PING 172.18.0.2 (172.18.0.2): 56 data bytes
+^C
+--- 172.18.0.2 ping statistics ---
+2 packets transmitted, 0 packets received, 100% packet loss
 
 # container1 zu container2
---- 172.2.2.2 ping statistics ---
+PING 172.18.2.2 (172.18.2.2): 56 data bytes
+^C
+--- 172.18.2.2 ping statistics ---
 2 packets transmitted, 0 packets received, 100% packet loss
 
 # container1 zu container3
---- 172.2.2.3 ping statistics ---
-4 packets transmitted, 0 packets received, 100% packet loss
-
-# container2 zu container0
---- 172.0.0.2 ping statistics ---
-3 packets transmitted, 0 packets received, 100% packet loss
-
-# container2 zu container1
---- 172.1.1.2 ping statistics ---
-3 packets transmitted, 0 packets received, 100% packet loss
-
-# container2 zu container3
---- 172.2.2.3 ping statistics ---
-3 packets transmitted, 0 packets received, 100% packet loss
-
-# container3 zu container0
---- 172.0.0.2 ping statistics ---
+PING 172.18.2.3 (172.18.2.3): 56 data bytes
+^C
+--- 172.18.2.3 ping statistics ---
 2 packets transmitted, 0 packets received, 100% packet loss
 
-# container3 zu container1
---- 172.1.1.2 ping statistics ---
+# container2 zu container0
+PING 172.18.0.2 (172.18.0.2): 56 data bytes
+^C
+--- 172.18.0.2 ping statistics ---
+2 packets transmitted, 0 packets received, 100% packet loss
+
+# container2 zu container1
+PING 172.18.1.2 (172.18.1.2): 56 data bytes
+^C
+--- 172.18.1.2 ping statistics ---
+2 packets transmitted, 0 packets received, 100% packet loss
+
+# container2 zu container3
+PING 172.18.2.3 (172.18.2.3): 56 data bytes
+^C
+--- 172.18.2.3 ping statistics ---
+2 packets transmitted, 0 packets received, 100% packet loss
+
+# container3 zu container0
+PING 172.18.0.2 (172.18.0.2): 56 data bytes
+^C
+--- 172.18.0.2 ping statistics ---
 3 packets transmitted, 0 packets received, 100% packet loss
 
+# container3 zu container1
+PING 172.18.1.2 (172.18.1.2): 56 data bytes
+^C
+--- 172.18.1.2 ping statistics ---
+2 packets transmitted, 0 packets received, 100% packet loss
+
 # container3 zu container2
---- 172.2.2.2 ping statistics ---
+PING 172.18.2.2 (172.18.2.2): 56 data bytes
+^C
+--- 172.18.2.2 ping statistics ---
 2 packets transmitted, 0 packets received, 100% packet loss
 ```
 

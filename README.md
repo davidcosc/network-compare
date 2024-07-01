@@ -429,7 +429,7 @@ Kommunikationstabelle:
 | container2 | no | no | yes | no |
 | container3 | no | no | no | yes |
 
-## Zustand der VMs mit OSPF in Variante 1 und Firewall Whitelisting L3
+## Zustand der VMs mit OSPF in Variante 1 und Firewall Forward Whitelisting L3
 
 ### NFT Firewallkonfiguration VM 1
 
@@ -437,6 +437,11 @@ Kommunikationstabelle:
 table ip ip-traffic-table {
         chain containers {
                 type filter hook forward priority filter; policy drop;
+                meta nftrace set 1
+                ip saddr 172.18.2.2 ip daddr 172.18.0.2 accept
+                ip saddr 172.18.0.2 ip daddr 172.18.2.2 accept
+                ip saddr 172.18.0.2 ip daddr 172.18.1.2 accept
+                ip saddr 172.18.1.2 ip daddr 172.18.0.2 accept
         }
 }
 ```
@@ -447,7 +452,84 @@ table ip ip-traffic-table {
 table ip ip-traffic-table {
         chain containers {
                 type filter hook forward priority filter; policy drop;
-                ip saddr 172.2.2.3 ip daddr 172.2.2.2 accept
+                meta nftrace set 1
+                ip saddr 172.18.2.2 ip daddr 172.18.0.2 accept
+                ip saddr 172.18.0.2 ip daddr 172.18.2.2 accept
+                ip saddr 172.18.2.2 ip daddr 172.18.2.3 accept
+                ip saddr 172.18.2.3 ip daddr 172.18.2.2 accept
         }
 }
 ```
+
+### Container Ping Test
+
+```bash
+# container0 zu contianer1
+PING 172.18.1.2 (172.18.1.2): 56 data bytes
+64 bytes from 172.18.1.2: seq=0 ttl=63 time=0.296 ms
+
+# container0 zu container2
+PING 172.18.2.2 (172.18.2.2): 56 data bytes
+64 bytes from 172.18.2.2: seq=0 ttl=62 time=0.597 ms
+
+# container0 zu container3
+PING 172.18.2.3 (172.18.2.3): 56 data bytes
+^C
+--- 172.18.2.3 ping statistics ---
+2 packets transmitted, 0 packets received, 100% packet loss
+
+# container1 zu container0
+PING 172.18.0.2 (172.18.0.2): 56 data bytes
+64 bytes from 172.18.0.2: seq=0 ttl=63 time=0.059 ms
+
+# container1 zu container2
+PING 172.18.2.2 (172.18.2.2): 56 data bytes
+^C
+--- 172.18.2.2 ping statistics ---
+2 packets transmitted, 0 packets received, 100% packet loss
+
+# container1 zu container3
+PING 172.18.2.3 (172.18.2.3): 56 data bytes
+^C
+--- 172.18.2.3 ping statistics ---
+3 packets transmitted, 0 packets received, 100% packet loss
+
+# container2 zu container0
+PING 172.18.0.2 (172.18.0.2): 56 data bytes
+64 bytes from 172.18.0.2: seq=0 ttl=62 time=0.671 ms
+
+# container2 zu container1
+PING 172.18.1.2 (172.18.1.2): 56 data bytes
+^C
+--- 172.18.1.2 ping statistics ---
+2 packets transmitted, 0 packets received, 100% packet loss
+
+# container2 zu container3
+PING 172.18.2.3 (172.18.2.3): 56 data bytes
+64 bytes from 172.18.2.3: seq=0 ttl=64 time=0.149 ms
+
+# container3 zu container0
+PING 172.18.0.2 (172.18.0.2): 56 data bytes
+^C
+--- 172.18.0.2 ping statistics ---
+2 packets transmitted, 0 packets received, 100% packet loss
+
+# container3 zu container1
+PING 172.18.1.2 (172.18.1.2): 56 data bytes
+^C
+--- 172.18.1.2 ping statistics ---
+2 packets transmitted, 0 packets received, 100% packet loss
+
+# container3 zu container2
+PING 172.18.2.3 (172.18.2.3): 56 data bytes
+64 bytes from 172.18.2.3: seq=0 ttl=64 time=0.040 ms
+```
+
+Kommunikationstabelle:
+||||||
+| ---------- | ---------- | ---------- | ---------- | ----------- |
+|            | container0 | container1 | container2 | container 3 |
+| container0 | yes | yes | yes | no |
+| container1 | yes | yes | no | no |
+| container2 | yes | no | yes | yes |
+| container3 | no | no | yes | yes |

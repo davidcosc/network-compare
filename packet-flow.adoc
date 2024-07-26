@@ -1,0 +1,144 @@
+[source, bash]
+----
+# disabled iptables
+root@ospf2:~# iptables -S
+-P INPUT ACCEPT
+-P FORWARD ACCEPT
+-P OUTPUT ACCEPT
+
+# nft ip family drop all forwarded
+root@ospf2:~# nft list ruleset
+table ip ip-traffic-table {
+        chain containers {
+                type filter hook forward priority filter; policy drop;
+        }
+}
+
+# ping container3 from container2
+/ # ping 172.18.2.3 -c1
+PING 172.18.2.3 (172.18.2.3): 56 data bytes
+64 bytes from 172.18.2.3: seq=0 ttl=64 time=0.226 ms
+
+--- 172.18.2.3 ping statistics ---
+1 packets transmitted, 1 packets received, 0% packet loss
+round-trip min/avg/max = 0.226/0.226/0.226 ms
+
+# ftrace over all avaiilable kernel bridge functions
+root@ospf2:/sys/kernel/tracing# echo function > current_tracer
+root@ospf2:/sys/kernel/tracing# cat trace | grep ping
+            ping-16370   [000] ..s2.  6859.393234: br_handle_frame <-__netif_receive_skb_core.constprop.0
+            ping-16370   [000] ..s2.  6859.393234: br_handle_frame_finish <-br_handle_frame
+            ping-16370   [000] ..s2.  6859.393235: br_allowed_ingress <-br_handle_frame_finish
+            ping-16370   [000] ..s2.  6859.393235: br_fdb_update <-br_handle_frame_finish
+            ping-16370   [000] ..s3.  6859.393237: br_switchdev_fdb_notify <-fdb_notify
+            ping-16370   [000] ..s3.  6859.393237: br_switchdev_fdb_populate <-br_switchdev_fdb_notify
+            ping-16370   [000] ..s3.  6859.393237: br_switchdev_event <-notifier_call_chain
+            ping-16370   [000] .Ns2.  6859.393250: br_fdb_find_rcu <-br_handle_frame_finish
+            ping-16370   [000] .Ns2.  6859.393251: br_flood <-br_handle_frame_finish
+            ping-16370   [000] .Ns2.  6859.393251: br_allowed_egress <-maybe_deliver
+            ping-16370   [000] .Ns2.  6859.393252: br_multicast_count <-maybe_deliver
+            ping-16370   [000] .Ns2.  6859.393252: __br_forward <-br_flood
+            ping-16370   [000] .Ns2.  6859.393252: br_handle_vlan <-__br_forward
+            ping-16370   [000] .Ns2.  6859.393252: br_forward_finish <-__br_forward
+            ping-16370   [000] .Ns2.  6859.393253: br_dev_queue_push_xmit <-br_forward_finish
+            ping-16370   [000] .Ns2.  6859.393253: br_switchdev_frame_set_offload_fwd_mark <-br_dev_queue_push_xmit
+            ping-16370   [000] .Ns2.  6859.393335: br_handle_frame <-__netif_receive_skb_core.constprop.0
+            ping-16370   [000] .Ns2.  6859.393335: br_handle_frame_finish <-br_handle_frame
+            ping-16370   [000] .Ns2.  6859.393335: br_allowed_ingress <-br_handle_frame_finish
+            ping-16370   [000] .Ns2.  6859.393336: br_fdb_update <-br_handle_frame_finish
+            ping-16370   [000] .Ns3.  6859.393336: br_switchdev_fdb_notify <-fdb_notify
+            ping-16370   [000] .Ns3.  6859.393336: br_switchdev_fdb_populate <-br_switchdev_fdb_notify
+            ping-16370   [000] .Ns3.  6859.393337: br_switchdev_event <-notifier_call_chain
+            ping-16370   [000] .Ns2.  6859.393343: br_fdb_find_rcu <-br_handle_frame_finish
+            ping-16370   [000] .Ns2.  6859.393344: br_forward <-br_handle_frame_finish
+            ping-16370   [000] .Ns2.  6859.393344: br_allowed_egress <-br_forward
+            ping-16370   [000] .Ns2.  6859.393344: __br_forward <-br_forward
+            ping-16370   [000] .Ns2.  6859.393344: br_handle_vlan <-__br_forward
+            ping-16370   [000] .Ns2.  6859.393344: br_forward_finish <-__br_forward
+            ping-16370   [000] .Ns2.  6859.393344: br_dev_queue_push_xmit <-br_forward_finish
+            ping-16370   [000] .Ns2.  6859.393345: br_switchdev_frame_set_offload_fwd_mark <-br_dev_queue_push_xmit
+
+----
+
+[source, bash]
+----
+# disabled iptables
+root@ospf2:~# iptables -S
+-P INPUT ACCEPT
+-P FORWARD ACCEPT
+-P OUTPUT ACCEPT
+
+# nft bridge family drop all forwarded
+root@ospf2:/sys/kernel/tracing# nft list ruleset
+table bridge bridge-traffic-table {
+        chain containers {
+                type filter hook forward priority 0; policy drop;
+        }
+}
+
+# ping container3 from container2
+/ # ping 172.18.2.3 -c1
+PING 172.18.2.3 (172.18.2.3): 56 data bytes
+^C
+--- 172.18.2.3 ping statistics ---
+1 packets transmitted, 0 packets received, 100% packet loss
+
+# ftrace over all avaiilable kernel bridge functions
+root@ospf2:/sys/kernel/tracing# cat trace | grep ping
+            ping-20013   [000] ..s2.  8659.548452: br_handle_frame <-__netif_receive_skb_core.constprop.0
+            ping-20013   [000] ..s2.  8659.548453: br_handle_frame_finish <-br_handle_frame
+            ping-20013   [000] ..s2.  8659.548454: br_allowed_ingress <-br_handle_frame_finish
+            ping-20013   [000] ..s2.  8659.548454: br_fdb_update <-br_handle_frame_finish
+            ping-20013   [000] ..s3.  8659.548455: br_switchdev_fdb_notify <-fdb_notify
+            ping-20013   [000] ..s3.  8659.548455: br_switchdev_fdb_populate <-br_switchdev_fdb_notify
+            ping-20013   [000] ..s3.  8659.548456: br_switchdev_event <-notifier_call_chain
+            ping-20013   [000] ..s2.  8659.548470: br_fdb_find_rcu <-br_handle_frame_finish
+            ping-20013   [000] ..s2.  8659.548470: br_flood <-br_handle_frame_finish
+            ping-20013   [000] ..s2.  8659.548471: br_allowed_egress <-maybe_deliver
+            ping-20013   [000] ..s2.  8659.548471: br_multicast_count <-maybe_deliver
+            ping-20013   [000] ..s2.  8659.548471: __br_forward <-br_flood
+            ping-20013   [000] ..s2.  8659.548471: br_handle_vlan <-__br_forward
+
+----
+
+[source, bash]
+----
+# disabled iptables
+root@ospf2:~# iptables -S
+-P INPUT ACCEPT
+-P FORWARD ACCEPT
+-P OUTPUT ACCEPT
+
+# nft bridge family drop all forwarded
+root@ospf2:~# nft list ruleset
+table ip ip-traffic-table {
+        chain containers {
+                type filter hook forward priority filter; policy drop;
+        }
+}
+
+# ping container3 from container2
+/ # ping 172.18.2.3 -c1
+PING 172.18.2.3 (172.18.2.3): 56 data bytes
+^C
+--- 172.18.2.3 ping statistics ---
+1 packets transmitted, 0 packets received, 100% packet loss
+
+# ftrace over all avaiilable kernel bridge functions
+root@ospf2:/sys/kernel/tracing# cat trace | grep ping
+            ping-2743    [000] ..s2.   523.651909: br_handle_frame <-__netif_receive_skb_core.constprop.0
+            ping-2743    [000] ..s2.   523.651910: br_nf_pre_routing <-br_handle_frame
+            ping-2743    [000] ..s2.   523.651911: br_validate_ipv4 <-br_nf_pre_routing
+            ping-2743    [000] ..s2.   523.651912: br_nf_pre_routing_finish <-br_nf_pre_routing
+            ping-2743    [000] ..s2.   523.651912: br_nf_hook_thresh <-br_nf_pre_routing_finish
+            ping-2743    [000] ..s2.   523.651912: br_handle_frame_finish <-br_nf_hook_thresh
+            ping-2743    [000] ..s2.   523.651913: br_allowed_ingress <-br_handle_frame_finish
+            ping-2743    [000] ..s2.   523.651913: br_fdb_update <-br_handle_frame_finish
+            ping-2743    [000] ..s2.   523.651914: br_fdb_find_rcu <-br_handle_frame_finish
+            ping-2743    [000] ..s2.   523.651914: br_forward <-br_handle_frame_finish
+            ping-2743    [000] ..s2.   523.651914: br_allowed_egress <-br_forward
+            ping-2743    [000] ..s2.   523.651915: __br_forward <-br_forward
+            ping-2743    [000] ..s2.   523.651915: br_handle_vlan <-__br_forward
+            ping-2743    [000] ..s2.   523.651915: br_nf_forward_ip <-nf_hook_slow
+            ping-2743    [000] ..s2.   523.651916: br_validate_ipv4 <-br_nf_forward_ip
+----

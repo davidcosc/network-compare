@@ -533,3 +533,72 @@ Kommunikationstabelle:
 | container1 | yes | yes | no | no |
 | container2 | yes | no | yes | yes |
 | container3 | no | no | yes | yes |
+
+
+"""
+curl 172.18.2.3:9090/api/v1/targets | jq
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  1535  100  1535    0     0   487k      0 --:--:-- --:--:-- --:--:--  749k
+{
+  "status": "success",
+  "data": {
+    "activeTargets": [
+      {
+        "discoveredLabels": {
+          "__address__": "http://google.de",
+          "__meta_url": "http://172.18.2.1:30080/discoveredtargets",
+          "__metrics_path__": "/probe",
+          "__param_module": "http_2xx",
+          "__scheme__": "http",
+          "__scrape_interval__": "5s",
+          "__scrape_timeout__": "5s",
+          "job": "blackbox-targets"
+        },
+        "labels": {
+          "instance": "http://google.de",
+          "job": "blackbox-targets"
+        },
+        "scrapePool": "blackbox-targets",
+        "scrapeUrl": "http://172.18.2.2:9115/probe?module=http_2xx&target=http%3A%2F%2Fgoogle.de",
+        "globalUrl": "http://172.18.2.2:9115/probe?module=http_2xx&target=http%3A%2F%2Fgoogle.de",
+        "lastError": "",
+        "lastScrape": "2024-08-15T08:22:07.043431108Z",
+        "lastScrapeDuration": 0.16978539,
+        "health": "up",
+        "scrapeInterval": "5s",
+        "scrapeTimeout": "5s"
+      },
+      {
+        "discoveredLabels": {
+          "__address__": "http://prometheus.io",
+          "__meta_url": "http://172.18.2.1:30080/discoveredtargets",
+          "__metrics_path__": "/probe",
+          "__param_module": "http_2xx",
+          "__scheme__": "http",
+          "__scrape_interval__": "5s",
+          "__scrape_timeout__": "5s",
+          "job": "blackbox-targets"
+        },
+        "labels": {
+          "instance": "http://prometheus.io",
+          "job": "blackbox-targets"
+        },
+        "scrapePool": "blackbox-targets",
+        "scrapeUrl": "http://172.18.2.2:9115/probe?module=http_2xx&target=http%3A%2F%2Fprometheus.io",
+        "globalUrl": "http://172.18.2.2:9115/probe?module=http_2xx&target=http%3A%2F%2Fprometheus.io",
+        "lastError": "",
+        "lastScrape": "2024-08-15T08:22:08.942824101Z",
+        "lastScrapeDuration": 0.138668454,
+        "health": "up",
+        "scrapeInterval": "5s",
+        "scrapeTimeout": "5s"
+      }
+    ],
+    "droppedTargets": [],
+    "droppedTargetCounts": {
+      "blackbox-targets": 0
+    }
+  }
+}
+"""

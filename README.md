@@ -602,3 +602,182 @@ curl 172.18.2.3:9090/api/v1/targets | jq
   }
 }
 """
+
+"""
+curl 172.18.2.4:9090/api/v1/targets | jq
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  1155  100  1155    0     0   687k      0 --:--:-- --:--:-- --:--:-- 1127k
+{
+  "status": "success",
+  "data": {
+    "activeTargets": [
+      {
+        "discoveredLabels": {
+          "__address__": "success",
+          "__metrics_path__": "/probe",
+          "__scheme__": "http",
+          "__scrape_interval__": "5s",
+          "__scrape_timeout__": "5s",
+          "job": "script-exporter"
+        },
+        "labels": {
+          "instance": "success",
+          "job": "script-exporter"
+        },
+        "scrapePool": "script-exporter",
+        "scrapeUrl": "http://172.18.2.2:9172/probe?name=success",
+        "globalUrl": "http://172.18.2.2:9172/probe?name=success",
+        "lastError": "",
+        "lastScrape": "2024-08-26T07:39:59.801573127Z",
+        "lastScrapeDuration": 1.013206768,
+        "health": "up",
+        "scrapeInterval": "5s",
+        "scrapeTimeout": "5s"
+      },
+      {
+        "discoveredLabels": {
+          "__address__": "failure",
+          "__metrics_path__": "/probe",
+          "__scheme__": "http",
+          "__scrape_interval__": "5s",
+          "__scrape_timeout__": "5s",
+          "job": "script-exporter"
+        },
+        "labels": {
+          "instance": "failure",
+          "job": "script-exporter"
+        },
+        "scrapePool": "script-exporter",
+        "scrapeUrl": "http://172.18.2.2:9172/probe?name=failure",
+        "globalUrl": "http://172.18.2.2:9172/probe?name=failure",
+        "lastError": "",
+        "lastScrape": "2024-08-26T07:39:59.614235947Z",
+        "lastScrapeDuration": 1.004663062,
+        "health": "up",
+        "scrapeInterval": "5s",
+        "scrapeTimeout": "5s"
+      }
+    ],
+    "droppedTargets": [],
+    "droppedTargetCounts": {
+      "script-exporter": 0
+    }
+  }
+}
+"""
+
+"""
+ curl 172.18.2.4:9090/api/v1/targets | jq
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  2600    0  2600    0     0   134k      0 --:--:-- --:--:-- --:--:--  141k
+{
+  "status": "success",
+  "data": {
+    "activeTargets": [
+      {
+        "discoveredLabels": {
+          "__address__": "http://google.de",
+          "__meta_url": "http://172.18.2.1:30080/discoveredtargets",
+          "__metrics_path__": "/probe",
+          "__param_module": "http_2xx",
+          "__scheme__": "http",
+          "__scrape_interval__": "5s",
+          "__scrape_timeout__": "5s",
+          "job": "blackbox-targets"
+        },
+        "labels": {
+          "instance": "http://google.de",
+          "job": "blackbox-targets"
+        },
+        "scrapePool": "blackbox-targets",
+        "scrapeUrl": "http://172.18.2.3:9115/probe?module=http_2xx&target=http%3A%2F%2Fgoogle.de",
+        "globalUrl": "http://172.18.2.3:9115/probe?module=http_2xx&target=http%3A%2F%2Fgoogle.de",
+        "lastError": "",
+        "lastScrape": "2024-08-26T07:44:32.420434152Z",
+        "lastScrapeDuration": 0.159538804,
+        "health": "up",
+        "scrapeInterval": "5s",
+        "scrapeTimeout": "5s"
+      },
+      {
+        "discoveredLabels": {
+          "__address__": "http://prometheus.io",
+          "__meta_url": "http://172.18.2.1:30080/discoveredtargets",
+          "__metrics_path__": "/probe",
+          "__param_module": "http_2xx",
+          "__scheme__": "http",
+          "__scrape_interval__": "5s",
+          "__scrape_timeout__": "5s",
+          "job": "blackbox-targets"
+        },
+        "labels": {
+          "instance": "http://prometheus.io",
+          "job": "blackbox-targets"
+        },
+        "scrapePool": "blackbox-targets",
+        "scrapeUrl": "http://172.18.2.3:9115/probe?module=http_2xx&target=http%3A%2F%2Fprometheus.io",
+        "globalUrl": "http://172.18.2.3:9115/probe?module=http_2xx&target=http%3A%2F%2Fprometheus.io",
+        "lastError": "",
+        "lastScrape": "2024-08-26T07:44:32.360463671Z",
+        "lastScrapeDuration": 0.155145155,
+        "health": "up",
+        "scrapeInterval": "5s",
+        "scrapeTimeout": "5s"
+      },
+      {
+        "discoveredLabels": {
+          "__address__": "success",
+          "__metrics_path__": "/probe",
+          "__scheme__": "http",
+          "__scrape_interval__": "5s",
+          "__scrape_timeout__": "5s",
+          "job": "script-exporter"
+        },
+        "labels": {
+          "instance": "success",
+          "job": "script-exporter"
+        },
+        "scrapePool": "script-exporter",
+        "scrapeUrl": "http://172.18.2.2:9172/probe?name=success",
+        "globalUrl": "http://172.18.2.2:9172/probe?name=success",
+        "lastError": "",
+        "lastScrape": "2024-08-26T07:44:29.823393784Z",
+        "lastScrapeDuration": 1.010565381,
+        "health": "up",
+        "scrapeInterval": "5s",
+        "scrapeTimeout": "5s"
+      },
+      {
+        "discoveredLabels": {
+          "__address__": "failure",
+          "__metrics_path__": "/probe",
+          "__scheme__": "http",
+          "__scrape_interval__": "5s",
+          "__scrape_timeout__": "5s",
+          "job": "script-exporter"
+        },
+        "labels": {
+          "instance": "failure",
+          "job": "script-exporter"
+        },
+        "scrapePool": "script-exporter",
+        "scrapeUrl": "http://172.18.2.2:9172/probe?name=failure",
+        "globalUrl": "http://172.18.2.2:9172/probe?name=failure",
+        "lastError": "",
+        "lastScrape": "2024-08-26T07:44:34.625235804Z",
+        "lastScrapeDuration": 1.007479414,
+        "health": "up",
+        "scrapeInterval": "5s",
+        "scrapeTimeout": "5s"
+      }
+    ],
+    "droppedTargets": [],
+    "droppedTargetCounts": {
+      "blackbox-targets": 0,
+      "script-exporter": 0
+    }
+  }
+}
+"""
